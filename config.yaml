@@ -1,16 +1,17 @@
 executables:
   - [standard-raxmlng, /Users/julia/Software/raxml-ng/bin/raxml-ng]
+  - [m1-raxmlng, /Users/julia/Software/raxml-ng_v1.1.0_macos_M1_experimental/raxml-ng]
 
 commandLines:
-  - --search 1
+  - --search1
   - --search
 #  - --tree pars{{1}}rand{{1}}
 
 datasets:
   /Users/julia/Data/Datasets/BioinfProtocols/dataset/027.phy:
     model: GTR+G
-  /Users/julia/Desktop/Promotion/DifficultyPrediction/PyPythia/examples/prim.phy:
-    model: GTR+G
+#  /Users/julia/Desktop/Promotion/DifficultyPrediction/PyPythia/examples/prim.phy:
+#    model: GTR+G
 
 iqtree: /Users/julia/Software/iqtree-2.1.3-MacOSX/bin/iqtree2
 outdir:

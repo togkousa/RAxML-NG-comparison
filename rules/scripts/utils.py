@@ -1,4 +1,4 @@
-from custom_types import *
+from .custom_types import *
 
 
 def read_file_contents(file_path: FilePath) -> List[str]:

@@ -1,12 +1,10 @@
-import numpy as np
-import os
 import re
 import subprocess
 
 from tempfile import TemporaryDirectory
 
-from custom_types import *
-from utils import *
+from .custom_types import *
+from .utils import *
 
 
 def get_raxmlng_best_llh(raxmlng_file: FilePath) -> float:
@@ -16,14 +14,14 @@ def get_raxmlng_best_llh(raxmlng_file: FilePath) -> float:
 
 def get_raxmlng_likelihoods(raxmlng_file: FilePath) -> List[float]:
     # [00:00:27] [worker #4] ML tree search #13, logLikelihood: -6485.304526
-    llh_regex = re.compile("\[\d+:\d+:\d+\]\s+\[worker\s+#\d+\]\s+ML\s+tree\s+search\s+#(\d+),\s+logLikelihood")
+    llh_regex = re.compile("\[\d+:\d+:\d+\]\s*(\[worker\s+#\d+\])?\s+ML\s+tree\s+search\s+#(\d+),\s+logLikelihood")
     likelihoods = []
 
     for line in read_file_contents(raxmlng_file):
         if "logLikelihood" in line:
             m = llh_regex.search(line)
             if m:
-                tree_id = int(m.groups()[0])
+                tree_id = int(m.groups()[1])
                 _, llh = line.rsplit(":", 1)
                 llh = float(llh)
                 likelihoods.append((tree_id, llh))
@@ -61,30 +59,6 @@ def get_raxmlng_elapsed_time(log_file: FilePath) -> float:
     raise ValueError(
         f"The given input file {log_file} does not contain the elapsed time."
     )
-
-
-def get_raxmlng_num_spr_rounds(log_file: FilePath) -> Tuple[int, int]:
-    slow_regex = re.compile("SLOW\s+spr\s+round\s+(\d+)")
-    fast_regex = re.compile("FAST\s+spr\s+round\s+(\d+)")
-
-    content = read_file_contents(log_file)
-
-    slow = -np.inf
-    fast = -np.inf
-
-    for line in content:
-        if "SLOW spr round" in line:
-            m = re.search(slow_regex, line)
-            if m:
-                slow_round = int(m.groups()[0])
-                slow = max(slow, slow_round)
-        if "FAST spr round" in line:
-            m = re.search(fast_regex, line)
-            if m:
-                fast_round = int(m.groups()[0])
-                fast = max(fast, fast_round)
-
-    return slow, fast
 
 
 def raxmlng_rfdist(raxmlng: Executable, trees_file: FilePath) -> Tuple[float, float, float]:

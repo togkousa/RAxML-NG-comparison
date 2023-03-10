@@ -1,6 +1,6 @@
 from snakemake.shell import shell
 
-from custom_types import *
+from .custom_types import *
 
 
 def iqtree_statistical_tests(
