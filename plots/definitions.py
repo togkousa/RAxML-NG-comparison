@@ -1,9 +1,12 @@
 import pathlib
+import yaml
 
 from plotly import graph_objects as go
 
 
-RESULTS_BASE = pathlib.Path("results")
+config = yaml.load(open("config.yaml"), yaml.Loader)
+
+RESULTS_BASE = pathlib.Path(config["outdir"])
 DATASETS = [d for d in RESULTS_BASE.iterdir() if d.is_dir()]
 CMD_MAPPINGS = None
 

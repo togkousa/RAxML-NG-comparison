@@ -6,4 +6,5 @@ dependencies:
   - snakemake
   - pandas
   - pyarrow
+  - plotly
   - dash

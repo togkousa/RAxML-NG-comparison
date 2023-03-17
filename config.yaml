@@ -1,19 +1,30 @@
+# Provide a list of RAxML-NG versions you want to test all the command lines for
+# Each list entry consists of two values: an alias for the version and a path to the executable of this version
+# e.g.:
+# - [raxmlng-version-1.1.0, /home/schmidja/software/raxml-ng/bin/raxml-ng]
 executables:
   - [standard-raxmlng, /Users/julia/Software/raxml-ng/bin/raxml-ng]
   - [m1-raxmlng, /Users/julia/Software/raxml-ng_v1.1.0_macos_M1_experimental/raxml-ng]
 
+# Provide a list of command lines you want to test
+# you do not need to provide the --msa and --model flags, as the pipeline will add them later
+# so if you want to run the following command line: raxml-ng --search1 --msa msa.phy --model GTR+G --seed 0 --threads 2
+# provide the following: - --search1 --seed 0 --threads 2
 commandLines:
   - --search1 --threads 2 --seed 0
   - --search --threads 2 --seed 0
   - --tree pars{1}rand{1}
   - --tree pars{5}rand{5}
 
+# Provide a list of MSAs you want to run all commands and versions on
+# Each list entry consists of two values: the path to the MSA and the respective model
 datasets:
-  /Users/julia/Data/Datasets/BioinfProtocols/dataset/027.phy:
-    model: GTR+G
-  /Users/julia/Desktop/Promotion/DifficultyPrediction/PyPythia/examples/prim.phy:
-    model: GTR+G
+  - [/Users/julia/Data/Datasets/BioinfProtocols/dataset/027.phy, GTR+G]
+  - [/Users/julia/Desktop/Promotion/DifficultyPrediction/PyPythia/examples/prim.phy, GTR+G]
 
+# Path to an IQ-Tree executable for the statistical tests
 iqtree: /Users/julia/Software/iqtree-2.1.3-MacOSX/bin/iqtree2
+
+# where to store all output files
 outdir:
   results

@@ -18,8 +18,11 @@ iqtree_cmd_prefix = command_dir / "{raxmlng}" / "{raxmlng}_iqtree"
 
 raxmlng_versions = dict(config["executables"])
 datasets = config["datasets"]
-msas = dict([(pathlib.Path(msa).name, msa) for msa in datasets])
-models = dict([(k, v["model"]) for k, v in datasets.items()])
+_msas, _models = zip(*datasets)
+
+msas = dict([(pathlib.Path(msa).name, msa) for msa in _msas])
+models = dict([(msa, model) for msa, model in zip(_msas, _models)])
+
 
 cmds = config["commandLines"]
 command_repr_mapping = dict([(cmd
