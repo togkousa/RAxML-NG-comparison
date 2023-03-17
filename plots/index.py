@@ -5,7 +5,7 @@ import pathlib
 from app import app
 from layouts import layout
 import init_callbacks
-import plots
+import callbacks
 
 app.layout = layout
 

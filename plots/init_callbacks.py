@@ -1,3 +1,4 @@
+import json
 from dash.dependencies import Output, Input
 
 from app import app
@@ -20,9 +21,11 @@ def populate_dataset_selector(_):
     Input("datasetSelector", "value"),
 )
 def populate_command_selector(dataset):
+    with open(RESULTS_BASE / "cmd_mapping.json") as f:
+        CMD_MAPPING = json.load(f)
     dataset_dir = RESULTS_BASE / dataset
 
-    options = [{"label": cmd.name, "value": cmd.name} for cmd in dataset_dir.iterdir()]
+    options = [{"label": CMD_MAPPING[cmd.name], "value": cmd.name} for cmd in dataset_dir.iterdir()]
     return options, options[0]["value"]
 
 

@@ -1,19 +1,35 @@
+import json
+
 from rules.scripts.custom_types import *
 
 configfile: "config.yaml"
 
-raxmlng_versions = dict(config["executables"])
+# Define all output directories and prefixes
+outdir = pathlib.Path(config["outdir"])
+dataset_dir = outdir / "{msa}_{model}"
+command_dir = dataset_dir /  "{cmd_repr}"
+raxmlng_cmd_prefix = command_dir / "{raxmlng}" / "{raxmlng}"
+iqtree_cmd_prefix = command_dir / "{raxmlng}" / "{raxmlng}_iqtree"
 
+# Load the run configurations:
+# - RAxML-NG versions
+# - Datasets and respective models
+# - Command lines to run
+
+raxmlng_versions = dict(config["executables"])
 datasets = config["datasets"]
 msas = dict([(pathlib.Path(msa).name, msa) for msa in datasets])
 models = dict([(k, v["model"]) for k, v in datasets.items()])
 
-command_repr_mapping = dict([(cmd.replace(" ", "").replace("-", ""), cmd) for cmd in config["commandLines"]])
-
-dataset_dir = pathlib.Path(config["outdir"]) / "{msa}_{model}"
-command_dir = dataset_dir /  "{cmd_repr}"
-raxmlng_cmd_prefix = command_dir / "{raxmlng}" / "{raxmlng}"
-iqtree_cmd_prefix = command_dir / "{raxmlng}" / "{raxmlng}_iqtree"
+cmds = config["commandLines"]
+command_repr_mapping = dict([(cmd
+                              .replace(" ", "")
+                              .replace("-", "")
+                              .replace("{", "")
+                              .replace("}", "")
+                              , cmd) for cmd in cmds])
+with open(outdir / "cmd_mapping.json", "w") as f:
+    json.dump(command_repr_mapping,f)
 
 
 def expand_path(dir: FilePath, expand_command: bool = True):
@@ -59,12 +75,13 @@ rule all:
         # Comparison of different RAxML-NG versions
         #---------------------
         # IQ-Tree significance analyses
-        collected_trees = expand_path(command_dir / "all.mlTrees", expand_command=True),
-        collected_best_tree = expand_path(command_dir / "all.bestTree", expand_command=True),
-        collected_iqtree_results = expand_path(command_dir / "all.iqtree", expand_command=True),
+        # collected_trees = expand_path(command_dir / "all.mlTrees", expand_command=True),
+        # collected_best_tree = expand_path(command_dir / "all.bestTree", expand_command=True),
+        # collected_iqtree_results = expand_path(command_dir / "all.iqtree", expand_command=True),
 
         # collected results
         # collected_tree_results = expand_path(command_dir / "all.results.trees.parquet", expand_command=True),
+
 
 
 include: "rules/per_version_rules.smk"

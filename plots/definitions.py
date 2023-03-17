@@ -4,7 +4,8 @@ from plotly import graph_objects as go
 
 
 RESULTS_BASE = pathlib.Path("results")
-DATASETS = RESULTS_BASE.iterdir()
+DATASETS = [d for d in RESULTS_BASE.iterdir() if d.is_dir()]
+CMD_MAPPINGS = None
 
 # plot definitions
 TEMPLATE = "plotly_white"

@@ -25,6 +25,10 @@ rule run_raxmlng_command:
 
         cmd = f"{raxmlng} --msa {msa} --model {model} {cmd_base} --prefix {prefix} > {log.snakelog} 2>&1"
 
+        # for Snakemake we need to escape curly braces with another curly brace
+        # otherwise it will treat it as a wildcard and crash...
+        cmd = cmd.replace("{", "{{").replace("}", "}}")
+
         shell(cmd)
 
         # some RAxML-NG commands, e.g. --search1 do not produce a .mlTrees file
