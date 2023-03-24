@@ -8,3 +8,6 @@ dependencies:
   - pyarrow
   - plotly
   - dash
+  - regex
+  - pip:
+      - dash_bootstrap_components

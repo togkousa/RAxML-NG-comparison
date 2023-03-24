@@ -5,15 +5,20 @@
     ```commandline
     git clone https://github.com/tschuelia/RAxML-NG-comparison.git
     ```
-2. Create a new conda environment using the provided `environment.yml` file:
-    ```commandline
-   conda env create -f environment.yml
+2. If you don't have miniconda already, install it according to the instructions [here] (https://docs.conda.io/en/latest/miniconda.html#installing)
+3. Solving the environment using conda is very slow, so I recommend you to use [mamba] (https://github.com/mamba-org/mamba) instead. You can install mamba using conda:
+   ```commandline
+   conda install mamba
    ```
-3. Activate the conda environment:
+4. Create a new conda environment using the provided `environment.yml` file:
+    ```commandline
+   mamba env create -f environment.yml
+   ```
+5. Activate the conda environment:
     ```commandline
     conda activate comparison
     ```
-4. Get all RAxML-NG versions you want to test ready to use.
+6. Get all RAxML-NG versions you want to test ready to use.
 
 ## Running the Pipeline
 1. Adjust the `config.yaml` file to your needs. The comments in the `config.yaml` will guide you.
