@@ -6,6 +6,8 @@ configfile: "config.yaml"
 
 # Define all output directories and prefixes
 outdir = pathlib.Path(config["outdir"])
+outdir.mkdir(exist_ok=True, parents=True)
+
 dataset_dir = outdir / "{msa}_{model}"
 command_dir = dataset_dir /  "{cmd_repr}"
 raxmlng_cmd_prefix = command_dir / "{raxmlng}" / "{raxmlng}"
