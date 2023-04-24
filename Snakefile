@@ -18,7 +18,19 @@ iqtree_cmd_prefix = command_dir / "{raxmlng}" / "{raxmlng}_iqtree"
 # - Datasets and respective models
 # - Command lines to run
 
-raxmlng_versions = dict(config["executables"])
+raxmlng_versions = []
+for entry in config["executables"]:
+    if len(entry) == 2:
+        name, path = entry
+        raxmlng_versions.append((name, (path, "")))
+    elif len(entry) == 3:
+        name, path, extra = entry
+        raxmlng_versions.append((name, (path, extra)))
+    else:
+        raise ValueError(f"Set either two or three values for the RAxML-NG executables in config.yaml. Instead got {len(entry)} values.")
+
+raxmlng_versions = dict(raxmlng_versions)
+
 datasets = config["datasets"]
 _msas, _models = zip(*datasets)
 

@@ -17,13 +17,13 @@ rule run_raxmlng_command:
     params:
         prefix = str(raxmlng_cmd_prefix)
     run:
-        raxmlng = raxmlng_versions[wildcards.raxmlng]
+        raxmlng, extra = raxmlng_versions[wildcards.raxmlng]
         msa = msas[wildcards.msa]
         model = models[msa]
         cmd_base = command_repr_mapping[wildcards.cmd_repr]
         prefix = params.prefix
 
-        cmd = f"{raxmlng} --msa {msa} --model {model} {cmd_base} --prefix {prefix} > {log.snakelog} 2>&1"
+        cmd = f"{raxmlng} {extra} --msa {msa} --model {model} {cmd_base} --prefix {prefix} > {log.snakelog} 2>&1"
 
         # for Snakemake we need to escape curly braces with another curly brace
         # otherwise it will treat it as a wildcard and crash...
@@ -49,15 +49,17 @@ rule iqtree_significance_tests_per_raxmlng_version:
         prefix = str(iqtree_cmd_prefix)
     run:
         msa = msas[wildcards.msa]
+        iqtree, *extra = config["iqtree"]
 
         iqtree_statistical_tests(
-            iqtree=config["iqtree"],
+            iqtree=iqtree,
             msa=msa,
             model=models[msa],
             output_prefix=params.prefix,
             mlTrees=input.mlTrees,
             bestTree=input.bestTree,
-            snakelog=log.snakelog
+            snakelog=log.snakelog,
+            cmd_extra=extra[0] if len(extra) > 0 else ""
         )
 
 
@@ -79,7 +81,7 @@ rule collect_results_per_raxmlng_version:
         n_ml_trees = len(read_file_contents(input.mlTrees))
         if n_ml_trees > 1:
             num_topos, rel_rfdist, abs_rfdist = raxmlng_rfdist(
-                raxmlng=raxmlng_versions[wildcards.raxmlng],
+                raxmlng=raxmlng_versions[wildcards.raxmlng][0],
                 trees_file=input.mlTrees
             )
         else:

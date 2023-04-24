@@ -10,13 +10,14 @@ def iqtree_statistical_tests(
     output_prefix: FilePath,
     mlTrees: FilePath,
     bestTree: FilePath,
-    snakelog: FilePath
+    snakelog: FilePath,
+    cmd_extra: str,
 ):
     partitioned = pathlib.Path(model).is_file()
     model_prefix = "-p" if partitioned else "-m"
 
     shell(
-        iqtree + " " + f"-s {msa} "
+        iqtree + f" {cmd_extra} -s {msa} "
         f"{model_prefix} {model} "
         f"-pre {output_prefix} "
         f"-z {mlTrees} "
