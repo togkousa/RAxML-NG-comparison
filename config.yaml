@@ -1,8 +1,8 @@
 # Provide a list of RAxML-NG versions you want to test all the command lines for
-# Each list entry consists of three values:
+# Each list entry consists of two or three values:
 # 1. an alias for the version
 # 2. a path to the executable of this version
-# 3. extra options you want to set for this version only
+# 3. extra options you want to set for this version only, this value is optional
 # e.g.:
 # - [raxmlng-version-1.1.0, /home/schmidja/software/raxml-ng/bin/raxml-ng]
 executables:
@@ -26,6 +26,7 @@ datasets:
   - [/Users/julia/Desktop/Promotion/DifficultyPrediction/PyPythia/examples/prim.phy, GTR+G]
 
 # Path to an IQ-Tree executable for the statistical tests and extra options you may want to set
+# leave the second value empty if you don't want to set extra options
 iqtree: [/Users/julia/Software/iqtree-2.1.3-MacOSX/bin/iqtree2, -blmin 1e-10]
 
 # where to store all output files
