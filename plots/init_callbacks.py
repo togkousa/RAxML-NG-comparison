@@ -47,3 +47,13 @@ def populate_entire_run_comparison_metric_selector(_):
 def populate_all_tree_comparison_metric_selector(_):
     options = [{"label": col, "value": col} for col in VERSION_COMPARISON_PLOT_METRICS_ALL_TREES]
     return options, options[0]["value"]
+
+@app.callback(
+    Output("resultMetricSelectorSummary", "options"),
+    Output("resultMetricSelectorSummary", "value"),
+    Input("_dummy", "children"),
+)
+def populate_summary_metric_selector(_):
+    options = [{"label": col, "value": col} for col in VERSION_COMPARISON_PLOT_METRICS_SUMMARY]
+    return options, options[0]["value"]
+

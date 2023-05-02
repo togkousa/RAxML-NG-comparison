@@ -88,6 +88,7 @@ rule collect_results_per_raxmlng_version:
             num_topos, rel_rfdist, abs_rfdist = (1, 0.0, 0.0)
 
         results = {
+            "version": wildcards.raxmlng, 
             "bestLogLikelihood": get_raxmlng_best_llh(input.raxmlng_log),
             "runtime": get_raxmlng_elapsed_time(input.raxmlng_log),
             "numberOfInferredTrees": n_ml_trees,
