@@ -69,13 +69,28 @@ layout = html.Div(
                         html.Div(
                             [
                                 html.H5("Comparison entire run"),
-                                dbc.Col(
-                                    get_empty_dropdown(
+                                dbc.Row(
+                                 [
+                                  dbc.Col(
+                                   [
+                                     get_empty_dropdown(
                                         label="Metric",
-                                        dropdown_id="resultMetricSelector",
-                                    ),
+                                        dropdown_id="resultMetricSelector1",
+                                     ),
+                                     dcc.Graph(id="metricEntireRunComparison1"),
+                                   ]
+                                  ),
+                                 dbc.Col(
+                                   [
+                                     get_empty_dropdown(
+                                        label="Metric",
+                                        dropdown_id="resultMetricSelector2",
+                                     ),
+                                     dcc.Graph(id="metricEntireRunComparison2"),
+                                   ]
+                                  ),
+                                 ]
                                 ),
-                                dcc.Graph(id="metricEntireRunComparison"),
                             ]
                         ),
                         html.Br(),

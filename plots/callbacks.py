@@ -52,10 +52,41 @@ def get_plot_options(plot_type, df, metric, dataset = None):
 
 
 @app.callback(
-    Output("metricEntireRunComparison", "figure"),
+    Output("metricEntireRunComparison1", "figure"),
     Input("datasetSelector", "value"),
     Input("commandSelector", "value"),
-    Input("resultMetricSelector", "value")
+    Input("resultMetricSelector1", "value")
+)
+def plot_per_command_comparison(dataset, command, metric):
+    results_dir = RESULTS_BASE / dataset / command
+    raxmlng_versions = [d for d in results_dir.iterdir() if d.is_dir()]
+
+    fig = go.Figure()
+
+    for version in raxmlng_versions:
+        df = pd.read_parquet(version / (version.name + ".results.parquet"))
+        plot_type = VERSION_COMPARISON_PLOT_METRICS_ENTIRE_RUN[metric]
+
+        plot_options, xtitle, ytitle = get_plot_options(plot_type, df, metric, dataset)
+
+        fig.add_trace(
+            plot_type(
+                name=version.name,
+                **plot_options
+            )
+        )
+
+        fig.update_xaxes(title=xtitle)
+        fig.update_yaxes(title=ytitle)
+
+    fig.update_layout(template=TEMPLATE)
+    return fig
+
+@app.callback(
+    Output("metricEntireRunComparison2", "figure"),
+    Input("datasetSelector", "value"),
+    Input("commandSelector", "value"),
+    Input("resultMetricSelector2", "value")
 )
 def plot_per_command_comparison(dataset, command, metric):
     results_dir = RESULTS_BASE / dataset / command

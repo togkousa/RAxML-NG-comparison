@@ -76,6 +76,8 @@ rule collect_results_per_raxmlng_version:
     output:
         general_results = raxmlng_cmd_prefix.with_suffix(".results.parquet"),
         tree_results = raxmlng_cmd_prefix.with_suffix(".results.trees.parquet")
+    params:
+        prefix = str(raxmlng_cmd_prefix)
     run:
         # RF-Distance between trees
         n_ml_trees = len(read_file_contents(input.mlTrees))
@@ -87,6 +89,18 @@ rule collect_results_per_raxmlng_version:
         else:
             num_topos, rel_rfdist, abs_rfdist = (1, 0.0, 0.0)
 
+        bs_likelihoods = get_raxmlng_bootstrap_likelihoods(input.raxmlng_log)
+        avg_bs_lh = sum(bs_likelihoods)/len(bs_likelihoods) if bs_likelihoods else 0
+
+        support_file = params.prefix + ".raxml.support"
+#        print(support_file)
+        if pathlib.Path(support_file).exists():
+          supports = get_raxmlng_bootstrap_supports(support_file)
+#          print(supports)
+          avg_bs_sup = sum(supports)/len(supports) if supports else 0
+        else:
+          avg_bs_sup = 0
+
         results = {
             "version": wildcards.raxmlng, 
             "bestLogLikelihood": get_raxmlng_best_llh(input.raxmlng_log),
@@ -95,8 +109,12 @@ rule collect_results_per_raxmlng_version:
             "uniqueTopologiesMLTrees": num_topos,
             "relativeRFDistanceMLTrees": rel_rfdist,
             "absoluteRFDistanceMLTrees": abs_rfdist,
+            "avgBootstrapLogLikelihood": avg_bs_lh,
+            "avgBootstrapSupport": avg_bs_sup,
         }
         # TODO: what other information do we want to retrieve from the log?
+
+        print(results)
 
         general_results = pd.DataFrame(data=results, index=[0])
         general_results.to_parquet(output.general_results)

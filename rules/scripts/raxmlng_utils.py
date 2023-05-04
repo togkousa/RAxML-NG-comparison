@@ -30,6 +30,28 @@ def get_raxmlng_likelihoods(raxmlng_file: FilePath) -> List[float]:
 
     return [llh for _, llh in likelihoods]
 
+def get_raxmlng_bootstrap_likelihoods(raxmlng_file: FilePath) -> List[float]:
+    # [00:00:00] [worker #0] Bootstrap tree #1, logLikelihood: -2746.271209
+    llh_regex = re.compile("\[\d+:\d+:\d+\]\s*(\[worker\s+#\d+\])?\s+Bootstrap\s+tree\s+#(\d+),\s+logLikelihood")
+    likelihoods = []
+
+    for line in read_file_contents(raxmlng_file):
+        if "logLikelihood" in line:
+            m = llh_regex.search(line)
+            if m:
+                tree_id = int(m.groups()[1])
+                _, llh = line.rsplit(":", 1)
+                llh = float(llh)
+                likelihoods.append((tree_id, llh))
+
+    likelihoods.sort()
+
+    return [llh for _, llh in likelihoods]
+
+def get_raxmlng_bootstrap_supports(support_file: FilePath) -> List[float]:
+    supports = re.findall("\)(\d+):", open(support_file).readline().strip())
+
+    return [float(x) for x in supports]
 
 def get_raxmlng_time_from_line(line: str) -> float:
     # two cases now:

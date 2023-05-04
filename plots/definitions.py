@@ -26,13 +26,12 @@ VERSION_COMPARISON_PLOT_METRICS_SUMMARY = {
 VERSION_COMPARISON_PLOT_METRICS_ENTIRE_RUN = {
     "bestLogLikelihood": go.Scatter,
     "runtime": go.Scatter,
-    "speedup": go.Scatter,
     "numberOfInferredTrees": go.Scatter,
     "uniqueTopologiesMLTrees": go.Scatter,
     "relativeRFDistanceMLTrees": go.Scatter,
     "absoluteRFDistanceMLTrees": go.Scatter,
-    "absoluteLogLikelihoodDiff": go.Scatter,
-    "relativeLogLikelihoodDiff": go.Scatter,
+    "avgBootstrapLogLikelihood" : go.Scatter,
+    "avgBootstrapSupport" : go.Scatter,
 }
 
 VERSION_COMPARISON_PLOT_METRICS_ALL_TREES = {
