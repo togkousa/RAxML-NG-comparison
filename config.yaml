@@ -1,34 +1,67 @@
 # Provide a list of RAxML-NG versions you want to test all the command lines for
-# Each list entry consists of two or three values:
-# 1. an alias for the version
-# 2. a path to the executable of this version
-# 3. extra options you want to set for this version only, this value is optional
+# Each list entry consists of two values: an alias for the version and a path to the executable of this version
 # e.g.:
 # - [raxmlng-version-1.1.0, /home/schmidja/software/raxml-ng/bin/raxml-ng]
 executables:
-  - [standard-raxmlng-higher-brlen, /Users/julia/Software/raxml-ng/bin/raxml-ng, --blmin 1e-2 --threads 2]
-  - [m1-raxmlng, /Users/julia/Software/raxml-ng_v1.1.0_macos_M1_experimental/raxml-ng]
+  - [raxmlng-version-1.1.0, ../raxml-ng-1.1.0]
+  - [raxmlng-dev, ../raxml-ng-dev]
+  - [raxml-ng-dev-extra-fastclv-off, ../raxml-ng-dev, --extra fastclv-off]
+  - [raxml-ng-old-epsilons, ../raxml-ng-dev, --lh-epsilon 0.1 --lh-epsilon-triplet 0.1]
 
 # Provide a list of command lines you want to test
 # you do not need to provide the --msa and --model flags, as the pipeline will add them later
 # so if you want to run the following command line: raxml-ng --search1 --msa msa.phy --model GTR+G --seed 0 --threads 2
 # provide the following: - --search1 --seed 0 --threads 2
 commandLines:
-  - --search1 --threads 2 --seed 0
-  - --search --threads 2 --seed 0
-  - --tree pars{1}rand{1}
-  - --tree pars{5}rand{5}
+  - --threads auto{48} --seed 0 --redo
+  - --search1 --threads auto{48} --seed 0 --redo
+  - --all --threads auto{48} --seed 0 --redo
+
+#  - --threads auto{48} --seed 10 --redo
 
 # Provide a list of MSAs you want to run all commands and versions on
 # Each list entry consists of two values: the path to the MSA and the respective model
 datasets:
-  - [/Users/julia/Data/Datasets/BioinfProtocols/dataset/027.phy, GTR+G]
-  - [/Users/julia/Desktop/Promotion/DifficultyPrediction/PyPythia/examples/prim.phy, GTR+G]
+  - [../data_new/101/101.phy, GTR+G]
+#  - [../data_new/125/125.phy, GTR+G]
+#  - [../data_new/1288/1288.phy, GTR+G]
+#  - [../data_new/140/140.phy, LG+G]
+#  - [../data_new/1481/1481.phy, GTR+G]
+  - [../data_new/150/150.phy, GTR+G]
+#  - [../data_new/1512/1512.phy, GTR+G]
+#  - [../data_new/1604/1604.phy, GTR+G]
+#  - [../data_new/1718/1718.phy, GTR+G]
+#  - [../data_new/1908/1908.phy, GTR+G]
+#  - [../data_new/2000/2000.phy, GTR+G]
+  - [../data_new/218/218.phy, GTR+G]
+  - [../data_new/354/354.phy, GTR+G]
+#  - [../data_new/404/404.phy, GTR+G]
+#  - [../data_new/479/479.phy, GTR+G]
+#  - [../data_new/500/500.phy, GTR+G]
+#  - [../data_new/628/628.phy, GTR+G]
+#  - [../data_new/714/714.phy, GTR+G]
+#  - [../data_new/994/994.phy, GTR+G]
 
-# Path to an IQ-Tree executable for the statistical tests and extra options you may want to set
-# leave the second value empty if you don't want to set extra options
-iqtree: [/Users/julia/Software/iqtree-2.1.3-MacOSX/bin/iqtree2, -blmin 1e-10]
+#  - [../data_new/3782/3782.phy, GTR+G]
+#  - [../data_new/128/128.phy, GTR+G]
+#  - [../data_new/2308/2308.phy, GTR+G]
+#  - [../data_new/2445/2445.phy, GTR+G]
+#  - [../data_new/2554/2554.phy, GTR+G]
+#  - [../data_new/4114/4114.phy, GTR+G]
+  - [../data_new/59/59.phy, GTR+G]
+#  - [../data_new/6718/6718.phy, GTR+G]
+#  - [../data_new/7664/7764.phy, GTR+G]
+#  - [../data_new/775/775.phy, LG+G]
+#  - [../data_new/94/94.phy, LG+G]
+
+#  - [../data/msa/rokas/supermatrices/A7/A7.phy, ../data/msa/rokas/supermatrices/A7/A7.raxng.model]
+#  - [../power/A7/A7.rba, part]
+#  - [../ggroup/wayne/automre/5832D.phy, ../ggroup/wayne/automre/part.txt]
+#  - [../data/msa/small/dna56.phy, GTR+G]
+
+# Path to an IQ-Tree executable for the statistical tests
+iqtree: [../soft/iqtree2]
 
 # where to store all output files
 outdir:
-  results
+  results_togkou

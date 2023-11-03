@@ -36,7 +36,7 @@ _msas, _models = zip(*datasets)
 
 msas = dict([(pathlib.Path(msa).name, msa) for msa in _msas])
 models = dict([(msa, model) for msa, model in zip(_msas, _models)])
-
+model_names = dict([(msa, model if not pathlib.Path(msa).is_file() else pathlib.Path(model).name) for msa, model in zip(_msas, _models)])
 
 cmds = config["commandLines"]
 command_repr_mapping = dict([(cmd
@@ -49,20 +49,21 @@ with open(outdir / "cmd_mapping.json", "w") as f:
     json.dump(command_repr_mapping,f)
 
 
-def expand_path(dir: FilePath, expand_command: bool = True):
-    files = expand(
-        expand(
-            dir,
+def expand_path(dir: FilePath, expand_command: bool = True, expand_dataset: bool = True):
+    
+    files = expand(dir,
+                  raxmlng=raxmlng_versions,
+                  allow_missing=True)
+
+    if expand_dataset:
+      files = expand(files,
             zip,
             msa=msas.keys(),
-            model=models.values(),
-            allow_missing=True
-        ),
-        raxmlng=raxmlng_versions,
-         allow_missing=True
-    )
+            model=model_names.values(),
+            allow_missing=True)
+
     if expand_command:
-        files = expand(files, cmd_repr=command_repr_mapping,)
+      files = expand(files, cmd_repr=command_repr_mapping,)
 
     return files
 
@@ -92,22 +93,16 @@ rule all:
         # Comparison of different RAxML-NG versions
         #---------------------
         # IQ-Tree significance analyses
-        # collected_trees = expand_path(command_dir / "all.mlTrees", expand_command=True),
-        # collected_best_tree = expand_path(command_dir / "all.bestTree", expand_command=True),
-        # collected_iqtree_results = expand_path(command_dir / "all.iqtree", expand_command=True),
+        collected_trees = expand_path(command_dir / "all.mlTrees", expand_command=True),
+        collected_best_tree = expand_path(command_dir / "all.bestTree", expand_command=True),
+#         collected_iqtree_results = expand_path(command_dir / "all.iqtree", expand_command=True),
 
         # collected results
-        # collected_tree_results = expand_path(command_dir / "all.results.trees.parquet", expand_command=True),
+        collected_general_results = expand_path(command_dir / "all.results.parquet", expand_command=True),
+#        collected_tree_results = expand_path(command_dir / "all.results.trees.parquet", expand_command=True),
 
 
 
 include: "rules/per_version_rules.smk"
 include: "rules/per_command_rules.smk"
-
-
-
-
-
-
-
 
