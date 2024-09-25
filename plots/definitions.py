@@ -13,8 +13,12 @@ CMD_MAPPINGS = None
 # plot definitions
 TEMPLATE = "plotly_white"
 
+HVLABEL = { "bgcolor": "white", "font": {"color": "black"} }   
+
 VERSION_COMPARISON_PLOT_METRICS_SUMMARY = {
     "speedup": go.Box,
+    "runtime": go.Scatter,
+    "avgBootstrapSupport" : go.Scatter,
     "absoluteLogLikelihoodDiff": go.Box,
     "relativeLogLikelihoodDiff": go.Box,
     "relativeRFDistanceMLTrees": go.Scatter,

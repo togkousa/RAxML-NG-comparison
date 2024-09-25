@@ -7,6 +7,8 @@ from plotly import graph_objects as go
 from app import app
 from definitions import *
 
+CWAY=["red", "green"]
+TFMT="%r"
 
 def get_plot_options(plot_type, df, metric, dataset = None):
     plot_data = df[metric]
@@ -40,6 +42,7 @@ def get_plot_options(plot_type, df, metric, dataset = None):
             "y": plot_data,
             "boxpoints": "all",
             "showlegend": False,
+            "hoverlabel": { "bgcolor": "white" }
         }
         xtitle = "RAxML-NG version"
         ytitle = metric
@@ -72,14 +75,15 @@ def plot_per_command_comparison(dataset, command, metric):
         fig.add_trace(
             plot_type(
                 name=version.name,
-                **plot_options
+                **plot_options,
+                
             )
         )
 
         fig.update_xaxes(title=xtitle)
-        fig.update_yaxes(title=ytitle)
+        fig.update_yaxes(title=ytitle, tickformat=TFMT)
 
-    fig.update_layout(template=TEMPLATE)
+    fig.update_layout(template=TEMPLATE, colorway=CWAY, hoverlabel=HVLABEL)
     return fig
 
 @app.callback(
@@ -108,9 +112,10 @@ def plot_per_command_comparison(dataset, command, metric):
         )
 
         fig.update_xaxes(title=xtitle)
-        fig.update_yaxes(title=ytitle)
+        fig.update_yaxes(title=ytitle, tickformat=TFMT)
+        
+    fig.update_layout(template=TEMPLATE, colorway=CWAY, hoverlabel=HVLABEL)
 
-    fig.update_layout(template=TEMPLATE)
     return fig
 
 
@@ -140,9 +145,9 @@ def plot_per_command_comparison(dataset, command, metric):
         )
 
         fig.update_xaxes(title=xtitle)
-        fig.update_yaxes(title=ytitle)
+        fig.update_yaxes(title=ytitle, tickformat=TFMT)
 
-    fig.update_layout(template=TEMPLATE)
+    fig.update_layout(template=TEMPLATE, colorway=CWAY, hoverlabel=HVLABEL)
     return fig
 
 
@@ -161,8 +166,9 @@ def plot_per_command_summary(command, metric):
     plot_type = VERSION_COMPARISON_PLOT_METRICS_SUMMARY[metric]
 
     fig = px.box(df, x = "version", y = metric, color="version", points="all", hover_data=["dataset"] )
+    fig.update_yaxes(tickformat=TFMT)
 
-    fig.update_layout(template=TEMPLATE)
+    fig.update_layout(template=TEMPLATE, colorway=CWAY, hoverlabel=HVLABEL)
     return fig
 
 
