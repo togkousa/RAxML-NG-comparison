@@ -7,11 +7,25 @@ from plotly import graph_objects as go
 config = yaml.load(open("config.yaml"), yaml.Loader)
 
 RESULTS_BASE = pathlib.Path(config["outdir"])
-DATASETS = [d for d in RESULTS_BASE.iterdir() if d.is_dir()]
+DATASETS = sorted([d for d in RESULTS_BASE.iterdir() if d.is_dir()])
 CMD_MAPPINGS = None
 
 # plot definitions
 TEMPLATE = "plotly_white"
+
+HVLABEL = { "bgcolor": "white", "font": {"color": "black"} }   
+
+VERSION_COMPARISON_PLOT_METRICS_SUMMARY = {
+    "speedup": go.Box,
+    "runtime": go.Scatter,
+    "avgBootstrapSupport" : go.Scatter,
+    "absoluteLogLikelihoodDiff": go.Box,
+    "relativeLogLikelihoodDiff": go.Box,
+    "relativeRFDistanceMLTrees": go.Scatter,
+    "numberOfInferredTrees": go.Scatter,
+    "uniqueTopologiesMLTrees": go.Scatter,
+    "isPlausible" : go.Box,
+}
 
 VERSION_COMPARISON_PLOT_METRICS_ENTIRE_RUN = {
     "bestLogLikelihood": go.Scatter,
@@ -20,6 +34,8 @@ VERSION_COMPARISON_PLOT_METRICS_ENTIRE_RUN = {
     "uniqueTopologiesMLTrees": go.Scatter,
     "relativeRFDistanceMLTrees": go.Scatter,
     "absoluteRFDistanceMLTrees": go.Scatter,
+    "avgBootstrapLogLikelihood" : go.Scatter,
+    "avgBootstrapSupport" : go.Scatter,
 }
 
 VERSION_COMPARISON_PLOT_METRICS_ALL_TREES = {

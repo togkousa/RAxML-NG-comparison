@@ -1,5 +1,6 @@
 # Provide a list of RAxML-NG versions you want to test all the command lines for
 # Each list entry consists of two values: an alias for the version and a path to the executable of this version
+# Each list entry consists of two values: an alias for the version and a path to the executable of this version
 # e.g.:
 # - [raxmlng-version-1.1.0, /home/schmidja/software/raxml-ng/bin/raxml-ng]
 executables:

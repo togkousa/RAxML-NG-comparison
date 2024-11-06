@@ -38,6 +38,7 @@ rule collect_trees_per_command:
                 mlTrees.write(f"{elem}\n")
             
             best = results.sort_values(by="logLikelihood", ascending=False).head(1)
+      
             if best.logLikelihood.item() > best_llh:
                 best_llh = best.logLikelihood.item()
                 best_tree = best.newick.item()
@@ -113,9 +114,10 @@ rule iqtree_significance_tests_per_command:
         prefix = str(command_dir / "all")
     run:
         msa = msas[wildcards.msa]
+        iqtree, *extra = config["iqtree"]
 
         iqtree_statistical_tests(
-            iqtree=config["iqtree"],
+            iqtree=iqtree,
             msa=msa,
             model=models[msa],
             output_prefix=params.prefix,
