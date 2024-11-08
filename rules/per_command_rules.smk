@@ -85,21 +85,40 @@ rule consel_significance_tests_per_command:
 
 rule collect_results_per_command:
     input:
+        general_results_per_version = expand_path(rules.collect_results_per_raxmlng_version.output.general_results, expand_command=False, expand_dataset=False),
         consel_file = rules.consel_significance_tests_per_command.output.consel_out,
         raxml_log = rules.consel_significance_tests_per_command.output.raxml_log,
         mltrees_file = rules.collect_trees_per_command.output.mlTrees,
         versions_file = rules.collect_trees_per_command.output.versions
 
     output:
-        collected_results = command_dir / "collected.results.parquet"
+        collected_results = command_dir / "collected.results.parquet",
+        general_results = command_dir / "all.results.parquet"
         
     run:
-        get_consel_results(input.consel_file, 
-                            input.raxml_log, 
-                            input.mltrees_file, 
-                            input.versions_file, 
-                            output.collected_results)
+        consel_results_reduced = get_consel_results(input.consel_file, 
+                                                    input.raxml_log, 
+                                                    input.mltrees_file, 
+                                                    input.versions_file, 
+                                                    output.collected_results)
+        
+        all_results = pd.concat([pd.read_parquet(f) for f in input.general_results_per_version], ignore_index=True).reset_index(drop=True)
 
+        # pull reference version from config file
+        baseline_ver = config['reference_version'][0]
+
+        baseline_version_line = all_results[all_results["version"] == baseline_ver].reset_index(drop=True)
+        baseline_runtime = baseline_version_line["runtime"][0]
+        baseline_loglh = baseline_version_line["bestLogLikelihood"][0]
+
+        all_results = all_results.assign(speedup = baseline_runtime / all_results["runtime"], 
+                                         absoluteLogLikelihoodDiff = all_results["bestLogLikelihood"] - baseline_loglh)
+
+        all_results = all_results.assign(relativeLogLikelihoodDiff = -1 * all_results["absoluteLogLikelihoodDiff"] / baseline_loglh)
+
+        print(all_results)
+
+        all_results.to_parquet(output.general_results)
 
 """
 rule iqtree_significance_tests_per_command:

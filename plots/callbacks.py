@@ -7,7 +7,7 @@ from plotly import graph_objects as go
 from app import app
 from definitions import *
 
-CWAY=["red", "green"]
+CWAY=["red", "green", "blue"]
 TFMT="%r"
 
 def get_plot_options(plot_type, df, metric, dataset = None):
@@ -75,8 +75,7 @@ def plot_per_command_comparison(dataset, command, metric):
         fig.add_trace(
             plot_type(
                 name=version.name,
-                **plot_options,
-                
+                **plot_options
             )
         )
 
@@ -162,7 +161,7 @@ def plot_per_command_summary(command, metric):
 
     fig = go.Figure()
 
-    df = pd.concat([pd.read_parquet(dset / command / "collected.results.parquet").assign(dataset=dset.name) for dset in datasets], ignore_index=True).reset_index(drop=True)
+    df = pd.concat([pd.read_parquet(dset / command / "all.results.parquet").assign(dataset=dset.name) for dset in datasets], ignore_index=True).reset_index(drop=True)
 
     plot_type = VERSION_COMPARISON_PLOT_METRICS_SUMMARY[metric]
 

@@ -139,6 +139,8 @@ def get_consel_results(consel_file, raxml_log, mlTrees_file, versions_file, outf
 
     versions_set = list(set(versions))
 
+    best_tree_dict = []
+
     for _version in versions_set:
         version_outfile = f"{cmd_dir}/{_version}/{_version}.consel.results.trees.parquet"
         out_df_version = out_df[out_df.version == _version]
@@ -146,7 +148,18 @@ def get_consel_results(consel_file, raxml_log, mlTrees_file, versions_file, outf
         
         idx = np.argmax(out_df_version.logLikelihood)
         out_df_version.loc[idx, "isBest"] = True
-
         out_df_version.to_parquet(version_outfile)
+        
+        out_df_version.pop("newick")
+        version_dict = out_df_version.to_dict(orient='records')
+        best_tree_dict.append(version_dict[idx])
 
-    return 
+        # correct summary "{version}.results.parquet" file
+        tmp_file = f"{cmd_dir}/{_version}/{_version}.results.parquet"
+        tmp_data = pd.read_parquet(tmp_file)
+        tmp_data.loc[0, "bestLogLikelihood"] = version_dict[idx]["logLikelihood"]
+        tmp_data["version"] = _version
+        tmp_data["isPlausible"] = 1 if version_dict[idx]["plausible"] else 0
+        tmp_data.to_parquet(tmp_file)
+
+    return best_tree_dict

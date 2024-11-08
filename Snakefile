@@ -100,7 +100,8 @@ rule all:
         versions_file = expand_path(command_dir / "all.versions", expand_command=True),
         consel_file = expand_path(command_dir / "all.consel", expand_command=True),
         sitelh_file = expand_path(command_dir / "all.raxml.siteLH", expand_command=True),
-        collected_consel_results = expand_path(command_dir / "collected.results.parquet", expand_command=True)
+        collected_consel_results = expand_path(command_dir / "collected.results.parquet", expand_command=True),
+        all_results = expand_path(command_dir / "all.results.parquet", expand_command=True)
 
         # collected results
 #        collected_general_results = expand_path(command_dir / "all.results.parquet", expand_command=True),
