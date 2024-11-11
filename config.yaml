@@ -14,6 +14,11 @@ executables:
 # provide the following: - --search1 --seed 0 --threads 2
 commandLines:
   - --threads auto{40} --seed 0 --redo
+  #- --search1 --threads auto{48} --seed 0 --redo
+  #- --all --threads auto{48} --seed 0 --redo
+
+# the version, based on which speedups and log-likelihood differences will be calculated
+reference_version: [raxmlng-version-1.1]
 
 # Provide a list of MSAs you want to run all commands and versions on
 # Each list entry consists of two values: the path to the MSA and the respective model
@@ -53,8 +58,6 @@ datasets:
 iqtree: [/hits/fast/cme/togkou/fastclv-raxml-ng/iqtree-2/iqtree-2.1.2-Linux/bin/iqtree2, -blmin 1e-3]
 consel_dir: [/home/togkouas/consel/consel/bin] # path to consel
 raxmlng_evaluation_bin: [/home/togkouas/raxml-ng_v1.2.0/raxml-ng, --threads 40]
-reference_version: [raxmlng-version-1.1] # the version, based on which speedups and log-likelihood differences 
-                                         # will be calculated
 
 # where to store all output files
 outdir:
